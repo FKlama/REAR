@@ -47,8 +47,8 @@ import javax.swing.SwingConstants;
 public class MainWindow implements ActionListener {
 	public  static final String PROGRAM_NAME	= "REAR Controller";
 	private static final int	MajorVersion 	= 0;
-	private static final int	MedVersion		= 2;
-	private static final int	MinorVersion	= 4;
+	private static final int	MedVersion		= 3;
+	private static final int	MinorVersion	= 0;
 	
 	private JFrame frmREAR;
 
@@ -56,7 +56,7 @@ public class MainWindow implements ActionListener {
 
 	//	private int 		mode; // 0 = Uninitialized; 1 = Initialized pre-Exam; 2 = Recording; 3 = Uploading & Done
 	// private int 		mode; // 0 = Uninitialized; 1 = Initialized pre-Exam; 3 = Recording; 5 = Uploading & Done
-	private int step;
+	private int 			step = 0;
 	private ClientStatus	mode;
 
 	private Boolean		editMode = true;		
@@ -561,14 +561,25 @@ public class MainWindow implements ActionListener {
 			else if(cmd.equals("SaveAsFile"))
 				saveAsFile();
 			else if(cmd.equals("ExamID_OK")) {
-				String examID = esd.getExamID();
+				@SuppressWarnings("unused")
+				Boolean	play, record;
+				String	examID, playFileURL;
+				play	= esd.getPlay();
+				record	= esd.getRecord();
+				examID	= esd.getExamID();
+				if(play)
+					playFileURL = esd.getPlayURL();
+				else
+					playFileURL = null;
 				esd.setVisible(false);
 				if(examID != null && ! examID.equals("")) {
 					table.setExamID(examID);
+					if(play)
+						table.setPlayFile(playFileURL);
 					table.setServer(prop.getUploadServer(), prop.getUploadUser());
+					table.init();
 					btnNextStep.setIcon(iconRec);
 					btnNextStep.setEnabled(false);
-					table.init();
 				}
 			}
 			else if(cmd.equals("ExamID_Cancel"))
