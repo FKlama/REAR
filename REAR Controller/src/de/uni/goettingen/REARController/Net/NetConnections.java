@@ -19,6 +19,7 @@ public class NetConnections {
 	private ConcurrentHashMap<Long, NetConnSignal>	connMap;
 	private ConcurrentHashMap<Long, String> 		recTimeMap;
 	private ConcurrentHashMap<Long, ClientStatus>	statusMap;
+	private ConcurrentHashMap<Long, Boolean>		activeMap;
 	
 	private PushSSHkeys sshPush;
 
@@ -28,6 +29,7 @@ public class NetConnections {
 //		ipMap			= new ConcurrentHashMap<Long, IPreachable>();
 		recTimeMap		= new ConcurrentHashMap<Long, String>();
 		statusMap		= new ConcurrentHashMap<Long, ClientStatus>();
+		activeMap		= new ConcurrentHashMap<Long, Boolean>();
 		sshPush 		= null;
 	}
 
@@ -35,11 +37,13 @@ public class NetConnections {
 //		System.out.println("Update (" + mList.data.size() + ")");
 		for(Vector<Object> m : mList.data) {
 			long		id	= (long) m.get(7);
+			String		studID = (String) m.get(3);
 			IPreachable ipr = new IPreachable((IPreachable) m.get(2));
+			Boolean		active = !studID.isEmpty();
 			if(ipr != null) {
 				InetAddress	ip	= ipr.getAddress();
 				if(ip != null && !clientIDs.contains(id)) {
-					System.out.println(">>>> " + id + " >>>>   " + ip);
+//					System.out.println(">>>> " + id + " >>>>   " + ip);
 //					if(ipMap.containsKey(id))
 //						System.out.println("    => " + ip.equals(ipMap.get(id).getAddress()));
 					if(!clientIDs.contains(id)) 
@@ -59,6 +63,8 @@ public class NetConnections {
 					System.out.println("done");
 				}
 			}
+			if(clientIDs.contains(id))
+				activeMap.put(id, active);
 		}
 	}
 	
@@ -69,7 +75,7 @@ public class NetConnections {
 		}
 		return out;
 	}
-
+	
 	public void init(ConcurrentHashMap<Long, String> ids) {
 		System.out.println("Clientcount: " + clientIDs.size());
 		for(long id : clientIDs) {
@@ -108,36 +114,48 @@ public class NetConnections {
 		}
 	}
 
+	public void micRetry() {
+		for(long id : clientIDs) {
+			if(activeMap.get(id))
+				connMap.get(id).micRetry();
+		}
+	}
 
+	
 	public void rec() {
 		for(long id : clientIDs) {
-			connMap.get(id).rec();
+			if(activeMap.get(id))
+				connMap.get(id).rec();
 		}
 	}
 
 
 	public void stop() {
 		for(long id : clientIDs) {
-			connMap.get(id).stop();
+			if(activeMap.get(id))
+				connMap.get(id).stop();
 		}
 	}
 
 
 	public void reset() {
 		for(long id : clientIDs) {
-			connMap.get(id).reset();
+			if(activeMap.get(id))
+				connMap.get(id).reset();
 		}
 	}
 	
 	public void setPlayFile(String URL) {
 		for(long id : clientIDs) {
-			connMap.get(id).setPlayFile(URL);
+			if(activeMap.get(id))
+				connMap.get(id).setPlayFile(URL);
 		}
 	}
 	
 	public void setPlayOnly() {
 		for(long id: clientIDs) {
-			connMap.get(id).setPlayOnly();
+			if(activeMap.get(id))
+				connMap.get(id).setPlayOnly();
 		}
 	}
 	
@@ -199,9 +217,9 @@ public class NetConnections {
 	public ClientStatus getStatus() {
 		ClientStatus out = new ClientStatus();
 		for(long id : clientIDs) {
-			if(connMap.containsKey(id)) {
-				NetConnSignal	conn	= connMap.get(id);
-				ClientStatus 	status	= new ClientStatus(conn.getStatus());
+			if(connMap.containsKey(id) && activeMap.containsKey(id) && activeMap.get(id)) {
+				NetConnSignal	conn		= connMap.get(id);
+				ClientStatus 	status		= new ClientStatus(conn.getStatus());
 				if(status != null) {
 					statusMap.put(id, status);
 					out.or(status);

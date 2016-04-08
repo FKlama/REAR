@@ -71,20 +71,22 @@ public class ClientConn implements Runnable {
 			//		System.out.println("Status reply: " + reply);
 			int st = Integer.parseInt(reply);
 			switch(st) {
+			case -1:
+				return new ClientStatus(false, true, false, false, false, false);
 			case 0:
-				return new ClientStatus(true,  false, false, false, false);
+				return new ClientStatus(true, false, false, false, false, false);
 			case 1:
-				return new ClientStatus(false, true,  false, false, false);
+				return new ClientStatus(false, false, true,  false, false, false);
 			case 2:
-				return new ClientStatus(false, false, true,  false, false);
+				return new ClientStatus(false, false, false, true,  false, false);
 			case 3:
-				return new ClientStatus(false, false, false, true,  false);
+				return new ClientStatus(false, false, false, false, true,  false);
 			case 4:
-				return new ClientStatus(false, false, false, false, true );
+				return new ClientStatus(false, false, false, false, false, true );
 			}
-			return new ClientStatus(true,  false, false, false, false);
+			return new ClientStatus(true, false, false, false, false, false);
 		}
-		return null;		
+		return new ClientStatus();		
 	}
 
 	public InetAddress getIP() {
@@ -170,6 +172,12 @@ public class ClientConn implements Runnable {
 		if(checkConnection())
 			return getReply("RECTIME\n");
 		return null;
+	}
+	
+	private boolean micRetry() {
+		if(checkConnection())
+			return sendAuthCommand("MICRETRY");
+		return false;
 	}
 
 	private boolean init() {
@@ -309,6 +317,8 @@ public class ClientConn implements Runnable {
 						setPlayFile(sig.getPlayFile());
 					if(command.equals("playOnly"))
 						setPlayOnly();
+					if(command.equals("micRetry"))
+						micRetry();
 				}
 				sig.setStatus(this.status());
 				sig.setTime(this.getTime());
