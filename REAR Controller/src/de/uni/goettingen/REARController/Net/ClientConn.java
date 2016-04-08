@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
-//import java.util.Date;
 
 import de.uni.goettingen.REARController.DataStruct.ClientStatus;
 
@@ -19,7 +18,6 @@ public class ClientConn implements Runnable {
 	private BufferedReader		in;
 	private AuthToken			token;
 	private String				salt;
-//	private Date				connectCheckTime;
 	private NetConnSignal		sig;
 	private String				modeString;
 	private String				pubKey;
@@ -28,22 +26,16 @@ public class ClientConn implements Runnable {
 
 	public ClientConn(NetConnSignal s) {
 		modeString = "None";
-//		connectCheckTime = null;
 		pubKey = null;
 		connect = false;
 		sig = s;
 		ip  = sig.getIPR();
 		token = new AuthToken();
-//		if(this.checkConnection()) {
-//			sig.setPubKey(this.getPubKey());
-//		}
 	}
 
 	private Boolean checkConnection() {
 		if(connect)
 			return true;
-		//if(connectCheckTime == null || (new Date()).getTime() - connectCheckTime.getTime() > (60 * 1000)) {
-		//	connectCheckTime = new Date();
 		else {
 			try {
 				sock	= new Socket(ip.getAddress(), 15000);
@@ -288,37 +280,40 @@ public class ClientConn implements Runnable {
 			} catch (InterruptedException e) {
 			}
 			if(this.isReachable()) {
-				String command = null;
+				String command = "";
+				while(command != null) {
+					command = null;
 					sig.setConnected(true);
 					if(sig.hasCommands())
 						command = new String(sig.popCommand());
-				
-				if(command != null) {
-					System.out.println("Got command: " + command);
-					if(command.equals("ID"))
-						setID(sig.getID());
-					if(command.equals("EID"))
-						setExamID(sig.getExamID());
-					if(command.equals("SetServer")) {
-						String[] server = sig.getServer();
-						this.setServer(server[0], server[1]);
+
+					if(command != null) {
+						System.out.println("Got command: " + command);
+						if(command.equals("ID"))
+							setID(sig.getID());
+						if(command.equals("EID"))
+							setExamID(sig.getExamID());
+						if(command.equals("SetServer")) {
+							String[] server = sig.getServer();
+							this.setServer(server[0], server[1]);
+						}
+						if(command.equals("init"))
+							modeString = "init";
+						if(command.equals("rec"))
+							modeString = "rec";
+						if(command.equals("stop"))
+							modeString = "stop";
+						if(command.equals("reset"))
+							modeString = "reset";
+						if(command.equals("STOP_THREAD"))
+							loop = false;
+						if(command.equals("playFile"))
+							setPlayFile(sig.getPlayFile());
+						if(command.equals("playOnly"))
+							setPlayOnly();
+						if(command.equals("micRetry"))
+							micRetry();
 					}
-					if(command.equals("init"))
-						modeString = "init";
-					if(command.equals("rec"))
-						modeString = "rec";
-					if(command.equals("stop"))
-						modeString = "stop";
-					if(command.equals("reset"))
-						modeString = "reset";
-					if(command.equals("STOP_THREAD"))
-						loop = false;
-					if(command.equals("playFile"))
-						setPlayFile(sig.getPlayFile());
-					if(command.equals("playOnly"))
-						setPlayOnly();
-					if(command.equals("micRetry"))
-						micRetry();
 				}
 				sig.setStatus(this.status());
 				sig.setTime(this.getTime());
