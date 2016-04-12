@@ -32,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
 
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
@@ -664,16 +663,9 @@ public class MainWindow implements ActionListener {
 			}
 			else if(cmd.equals("DeleteRow")) {
 				int[] rows = table.getJTable().getSelectedRows();
-				if(rows.length > 0) {
-					Arrays.sort(rows);
-					for(int i = 0; i < rows.length / 2; i++) {  // reverse sorted after this
-						int tmp = rows[i];
-						rows[i] = rows[rows.length - i - 1];
-						rows[rows.length - i - 1] = tmp;
-					}
+				if(rows.length > 0) 
 					for(int r : rows) 
-						table.removeRow(r);
-				}
+						table.getTableModel().removeRow(r);
 			}
 			else if(cmd.equals("DebugSignals")) {
 				int[] rows = table.getJTable().getSelectedRows();
