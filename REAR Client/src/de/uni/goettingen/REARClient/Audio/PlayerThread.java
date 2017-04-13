@@ -27,17 +27,17 @@ public class PlayerThread implements Runnable {
 	
 	PlayerThread(File audioFile, Player p) {
 		try {
-			System.out.println("Insisde PlayerThread");
+			player.log("Insisde PlayerThread");
 			stop			= false;
 			done			= false;
 			player			= p;
 			fileFormat 		= AudioSystem.getAudioFileFormat(audioFile);
 			audioFormat		= fileFormat.getFormat();
-			System.out.println("  got file format");
+			player.log("  got file format");
 //			type			= fileFormat.getType();
 			
 			inS 			= AudioSystem.getAudioInputStream(audioFile);
-			System.out.println("  got audioInputStream");
+			player.log("  got audioInputStream");
 			decodedFormat	= new AudioFormat(	AudioFormat.Encoding.PCM_SIGNED,
 					audioFormat.getSampleRate(),
 					16,
@@ -45,7 +45,7 @@ public class PlayerThread implements Runnable {
 					audioFormat.getChannels() * 2,
 					audioFormat.getSampleRate(),
 					false );
-			System.out.println("  created output format");
+			player.log("  created output format");
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,7 +57,7 @@ public class PlayerThread implements Runnable {
 	}
 	
 	private void rawplay(AudioFormat targetFormat, AudioInputStream dinS) {
-		System.out.println("Inside PlayerThread::rawplay()");
+		player.log("Inside PlayerThread::rawplay()");
 		byte[] data = new byte[4096];
 		SourceDataLine line = getLine(targetFormat);
 		if(line != null) {
@@ -109,7 +109,7 @@ public class PlayerThread implements Runnable {
 	
 	@Override
 	public void run() {
-		System.out.println("Running Player thread");
+		player.log("Running Player thread");
 		player.setPlaying(true);
 		dinS	= AudioSystem.getAudioInputStream(decodedFormat, inS);
 //		dinS = inS;

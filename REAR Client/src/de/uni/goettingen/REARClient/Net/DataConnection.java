@@ -29,20 +29,27 @@ public class DataConnection implements Runnable {
 		signal = s;
 	}
 	
+	private void log(String message) {
+		if(signal != null)
+			signal.log(message);
+		else
+			System.out.println(message);
+	}
+	
 	public void pushFile(File f, String sID, String eID) {
 		file		= f;
 		studentID	= sID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\n";
 		examID		= eID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\n";
-		System.out.println("push " + f.getAbsolutePath());
+		log("push " + f.getAbsolutePath());
 		Thread t = new Thread(this);
 		t.start();
 	}
 	
 	public void run() {
 		try {
-			System.out.println("  inside Thread");
+			log("  inside Thread");
 			ssh.ensureConnection();
-			System.out.println("  connecting to "+host+":"+port);
+			log("  connecting to "+host+":"+port);
 			Socket 				sock		= new Socket(host, port);
 			DataOutputStream	out			= new DataOutputStream(sock.getOutputStream());
 			FileInputStream		fStr		= new FileInputStream(file);
@@ -52,19 +59,19 @@ public class DataConnection implements Runnable {
 			out.write(studentID.getBytes(), 0, studentID.length());
 			out.write(examID.getBytes(), 0, examID.length());
 			while((rsize = fStr.read(buff, 0, 1024)) > 0) {
-//				System.out.println("  rsize = " + rsize);
+//				log("  rsize = " + rsize);
 				out.write(buff, 0, rsize);
 				total += rsize;
 			}
 			fStr.close();
-			System.out.println("   size " + total);
+			log("   size " + total);
 			Thread.sleep(3000);
 			out.close();
 			sock.close();
 			
 			signal.finishedDownload();
 			
-			System.out.println("  closing Thread");
+			log("  closing Thread");
 		}
 		catch(Exception e) {
 			e.printStackTrace();

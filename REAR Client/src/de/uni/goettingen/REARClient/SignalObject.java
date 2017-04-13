@@ -43,9 +43,12 @@ public class SignalObject {
 	private Boolean audioTestDone;
 	private Boolean runningAudioTest;
 	
+	private LoggingOutput log;
+	
 	private Object downloadSync = new Object();
 
-	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps) {
+	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps, LoggingOutput l) {
+		log = l;
 		shutdownServer = false;
 		win = w;
 		micLine = ml;
@@ -64,6 +67,12 @@ public class SignalObject {
 		audioTestDone = false;
 		runningAudioTest = false;
 		this.checkMicrophone();
+	}
+	
+	public void log(String message) {
+		synchronized(log) {
+			log.out(message);
+		}
 	}
 
 	public synchronized Boolean getDoPlay() {
@@ -105,7 +114,7 @@ public class SignalObject {
 
 	public synchronized void setAudioFileURL(String urlString) {
 		try {
-			// System.out.println("Setting audio URL = " + urlString);
+			log.out("Setting audio URL = " + urlString);
 			playFileLocation = new URL(urlString);
 			playFile = new File(prop.getDefaultPath() + "playback.mp3");
 			DownloadThread downloadTh = new DownloadThread(playFileLocation, this, playFile);
@@ -197,10 +206,10 @@ public class SignalObject {
 		if(!runningAudioTest) {
 			audioTestDone = false;
 			runningAudioTest = true;
-			System.out.println("Starting audio test");
+			log.out("Starting audio test");
 			win.startAudioTest();
 			recPath = new String(prop.getAudioPath() + "audioTest.flac");
-			System.out.println("  downloading file");
+			log.out("  downloading file");
 			
 			Boolean cont = true;
 			while (cont) {
@@ -214,7 +223,7 @@ public class SignalObject {
 				}
 			}
 			System.out.print("  playing message");
-			messagePlayer = new Player(playTestFile, null);
+			messagePlayer = new Player(playTestFile, null, this);
 			System.out.print("..."); System.out.flush();
 			while (!messagePlayer.isDone()) {
 				try {
@@ -223,7 +232,7 @@ public class SignalObject {
 					;
 				}
 			}
-			System.out.println("  recording sample");
+			log.out("  recording sample");
 			recMessage = new Recorder(micLine, new File(recPath), true);
 			Thread recThread = new Thread(recMessage);
 			recThread.start();
@@ -233,15 +242,15 @@ public class SignalObject {
 				;
 			}
 			recMessage.stopRecording();
-			System.out.println("    stopped recording");
+			log.out("    stopped recording");
 			try {
 				TimeUnit.SECONDS.sleep(1);
 			} catch (Exception e) {
 				;
 			}
 			micLine.close();
-			System.out.println("  play back recording");
-			voicePlayer = new Player(new File(recPath), null);
+			log.out("  play back recording");
+			voicePlayer = new Player(new File(recPath), null, this);
 			while (!voicePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -249,7 +258,7 @@ public class SignalObject {
 					;
 				}
 			}
-			System.out.println("  done");
+			log.out("  done");
 			micLine.open();
 			audioTestDone = true;
 			runningAudioTest = false;
@@ -265,14 +274,15 @@ public class SignalObject {
 	
 	public synchronized void startRecording() {
 		String path;
+		log.out("Starting recording");
 		if (win.getExamID() != null && !win.getExamID().equals("")) {
 			path = new String(prop.getAudioPath() + win.getExamID().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\\");
 			File p = new File(path);
 			p.mkdirs();
 		} else
 			path = new String(prop.getAudioPath());
-		System.out.println(path);
-		System.out.println(win.getExamID());
+		log.out("  file =" + path);
+		log.out("  ID   =" + win.getExamID());
 		if (win.getID() != null && !win.getID().equals(""))
 			outFile = new File(path + win.getID().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + ".flac");
 		else
@@ -281,15 +291,15 @@ public class SignalObject {
 		Thread recThread = new Thread(rec);
 		recThread.start();
 		if (doPlay)
-			player = new Player(playFile, rec);
+			player = new Player(playFile, rec, this);
 		win.setRecording(doRecord, doPlay);
 	}
 
 	private synchronized long getRecFileSize() {
-		System.out.println("Determining file Size");
+		log.out("Determining file Size");
 		if (outFile != null && outFile.exists()) {
 			long l = outFile.length();
-			System.out.println("File size: " + Long.toString(l));
+			log.out("File size: " + Long.toString(l));
 			return l;
 		} else
 			return 0;
