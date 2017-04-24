@@ -102,11 +102,13 @@ public class SignalObject {
 			synchronized(downloadSync) {
 				playFileDownloaded = false;
 			}
+			log.out("Preparing to download Audio-Test-File");
 			playTestFileLocation = new URL(urlString);
 			playTestFile = new File(prop.getDefaultPath() + "audioTest.mp3");
 			DownloadThread downloadTestTh = new DownloadThread(playTestFileLocation, this, playTestFile);
 			Thread dtt = new Thread(downloadTestTh);
 			dtt.start();
+			log.out("Downloading Audio-Test-File");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -203,16 +205,18 @@ public class SignalObject {
 
 	public synchronized void startAudioTest() {
 		String recPath;
+		log.out("Entered startAudioTest()");
 		if(!runningAudioTest) {
 			audioTestDone = false;
 			runningAudioTest = true;
 			log.out("Starting audio test");
 			win.startAudioTest();
 			recPath = new String(prop.getAudioPath() + "audioTest.flac");
-			log.out("  downloading file");
 			
+			log.out("  check if file is downloaded");
 			Boolean cont = true;
 			while (cont) {
+				log.out("  checking...");
 				try {
 					Thread.sleep(1000);
 				} catch (Exception e) {
