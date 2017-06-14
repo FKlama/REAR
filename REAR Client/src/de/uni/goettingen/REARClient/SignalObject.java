@@ -11,7 +11,6 @@ import de.uni.goettingen.REARClient.Audio.Recorder;
 import de.uni.goettingen.REARClient.GUI.StatusWindow;
 import de.uni.goettingen.REARClient.Net.DataConnection;
 import de.uni.goettingen.REARClient.Net.DownloadThread;
-import de.uni.goettingen.REARClient.Net.SSH.SSHconnection;
 import de.uni.goettingen.REARClient.Net.SSH.SSHkey;
 
 public class SignalObject {
@@ -23,7 +22,6 @@ public class SignalObject {
 	private DataConnection dataC;
 	private String studentID;
 	private String examID;
-	private SSHconnection ssh;
 	private String uploadServer;
 	private String uploadUser;
 	private PropertiesStore prop;
@@ -182,8 +180,7 @@ public class SignalObject {
 	}
 
 	public synchronized void initClient() {
-		ssh = new SSHconnection(uploadServer, uploadUser, sshKey, prop);
-		dataC = new DataConnection("127.0.0.1", prop.getDataPort(), ssh);
+		dataC = new DataConnection(this.getUploadPath());
 		dataC.addSignal(this);
 		win.init();
 	}
@@ -364,5 +361,9 @@ public class SignalObject {
 
 	public synchronized void finishedDownload() {
 		win.setOK();
+	}
+	
+	public synchronized File getUploadPath() {
+		return new File(prop.getUploadPath());
 	}
 }
