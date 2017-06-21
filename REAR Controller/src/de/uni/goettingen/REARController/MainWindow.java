@@ -52,9 +52,9 @@ import javax.swing.JSpinner;
 
 public class MainWindow implements ActionListener {
 	public  static final String PROGRAM_NAME	= "REAR Controller (Production)";
-	private static final int	MajorVersion 	= 0;
-	private static final int	MedVersion		= 4;
-	private static final int	MinorVersion	= 3;
+	private static final int	MajorVersion 	= 1;
+	private static final int	MedVersion		= 0;
+	private static final int	MinorVersion	= 0;
 	
 	private JFrame frmREAR;
 
