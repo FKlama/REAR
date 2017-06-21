@@ -37,13 +37,14 @@ public class SignalObject {
 	private Player player;
 	private Player messagePlayer;
 	private Player voicePlayer;
+	private LoggingOutput logger;
 	
 	private Boolean audioTestDone;
 	private Boolean runningAudioTest;
 	
 	private Object downloadSync = new Object();
 
-	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps) {
+	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps, LoggingOutput logOutput) {
 		shutdownServer = false;
 		win = w;
 		micLine = ml;
@@ -61,7 +62,14 @@ public class SignalObject {
 		doPlay = false;
 		audioTestDone = false;
 		runningAudioTest = false;
+		logger = logOutput;
 		this.checkMicrophone();
+	}
+	
+	public void log(String message) {
+		synchronized(logger) {
+			logger.out(message);
+		}
 	}
 
 	public synchronized Boolean getDoPlay() {
@@ -211,7 +219,7 @@ public class SignalObject {
 				}
 			}
 			System.out.print("  playing message");
-			messagePlayer = new Player(playTestFile, null);
+			messagePlayer = new Player(this, playTestFile, null);
 			System.out.print("..."); System.out.flush();
 			while (!messagePlayer.isDone()) {
 				try {
@@ -238,7 +246,7 @@ public class SignalObject {
 			}
 			micLine.close();
 			System.out.println("  play back recording");
-			voicePlayer = new Player(new File(recPath), null);
+			voicePlayer = new Player(this, new File(recPath), null);
 			while (!voicePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -278,7 +286,7 @@ public class SignalObject {
 		Thread recThread = new Thread(rec);
 		recThread.start();
 		if (doPlay)
-			player = new Player(playFile, rec);
+			player = new Player(this, playFile, rec);
 		win.setRecording(doRecord, doPlay);
 	}
 

@@ -21,7 +21,7 @@ public class DownloadThread implements Runnable {
 		sig		= sigIn;
 		outFile	= file;
 
-		System.out.println("Created Download Thread => " + file.getAbsolutePath());
+		sig.log("Created Download Thread => " + file.getAbsolutePath());
 	}
 	
 	@Override
@@ -34,16 +34,16 @@ public class DownloadThread implements Runnable {
 			BufferedInputStream  bis = new BufferedInputStream(con.getInputStream());
 			BufferedOutputStream bos = new BufferedOutputStream(
 										new FileOutputStream(outFile.getAbsolutePath()));
-			System.out.println("[download] created connection");
+			sig.log("[download] created connection");
 			while((i = bis.read()) != -1) {
 				bos.write(i);
 			}
-			System.out.println("[download] finished writing");
+			sig.log("[download] finished writing");
 			bos.flush();
 			bis.close();
 			bos.close();
 			sig.finishedAudioDownload();
-			System.out.println("sig.finishedAudioDownload();");
+			sig.log("sig.finishedAudioDownload();");
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -52,7 +52,7 @@ public class DownloadThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("[download] finished");
+		sig.log("[download] finished");
 	}
 
 }

@@ -29,14 +29,14 @@ public class DataConnection implements Runnable {
 		file		= f;
 		studentID	= sID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\n";
 		examID		= eID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\n";
-		System.out.println("push " + f.getAbsolutePath());
+		signal.log("push " + f.getAbsolutePath());
 		Thread t = new Thread(this);
 		t.start();
 	}
 	
 	public void run() {
 		try {
-			System.out.println("  inside Thread");
+			signal.log("  inside Thread");
 			String				filename    = examID + "_" + studentID + ".flac";
 			File 				outFile		= new File(uploadPath, filename);
 			
@@ -46,7 +46,7 @@ public class DataConnection implements Runnable {
 			
 			signal.finishedDownload();
 			
-			System.out.println("  closing Thread");
+			signal.log("  closing Thread");
 		}
 		catch(Exception e) {
 			e.printStackTrace();

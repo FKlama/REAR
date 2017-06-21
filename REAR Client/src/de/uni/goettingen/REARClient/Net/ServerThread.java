@@ -40,7 +40,7 @@ public class ServerThread implements Runnable {
 			out			= new DataOutputStream(conn.getOutputStream());
 			remoteAddr	= conn.getInetAddress().toString() + ":" + conn.getPort();
 			if(REARclient.DEBUG)
-				System.out.println("Running connection thread connected to " + remoteAddr + "#\n");
+				signal.log("Running connection thread connected to " + remoteAddr + "#\n");
 
 			while(!quit) {
 				String msg = new String(in.readLine());
@@ -79,14 +79,14 @@ public class ServerThread implements Runnable {
 				
 				else if(message.get(0).equals("RECTIME")) {
 					String outStr = signal.getTime() + "\n";
-					System.out.println("> " + outStr.trim());
+					signal.log("> " + outStr.trim());
 					out.writeBytes(outStr);
 				}
 				
 				else if(message.get(0).equals("STATUS")) {
 					String outStr = new String();
 					outStr = String.valueOf(signal.getMode()) + "\n";
-					System.out.println("> " + outStr.trim());
+					signal.log("> " + outStr.trim());
 					out.writeBytes(outStr);
 				}
 				

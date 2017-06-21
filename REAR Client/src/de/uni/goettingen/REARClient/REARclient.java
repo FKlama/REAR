@@ -34,6 +34,7 @@ public class REARclient {
 		StatusWindow	win				= new StatusWindow();
 		
 		prop.load(configDirs);
+		LoggingOutput logger = new LoggingOutput(new File(prop.getLogFile()));
 		
 		File outFile = new File(prop.getAudioPath());
 		outFile.mkdirs();
@@ -42,8 +43,9 @@ public class REARclient {
 		
 		ServerSocket server = new ServerSocket(prop.getListenPort(), 10, InetAddress.getByName("0.0.0.0"));
 		
-		SignalObject signal = new SignalObject(win, micLine, sshKey, prop);
+		SignalObject signal = new SignalObject(win, micLine, sshKey, prop, logger);
 		win.setSignalObject(signal);
+		micLine.setSignalObject(signal);
 		
 		while(! signal.getShutdownStatus())
 		{
