@@ -4,11 +4,5 @@
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="lib" path="C:/Users/Frederik Klama/git/REAR/lib/jsch-0.1.53.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Frederik Klama/git/REAR/lib/commons-lang3-3.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Frederik Klama/git/REAR/resources - Copy (4).zip"/>
-<<<<<<< HEAD
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-=======
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
->>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="C:/Users/Frederik Klama/git/REAR/resources - Copy (4).zip"/><classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/><classpathentry kind="output" path="bin"/>
 </classpath>

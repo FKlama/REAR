@@ -42,18 +42,14 @@ public class REARclient {
 	public static void run() throws Exception
 	{
 		PropertiesStore prop			= new PropertiesStore();
-		MicrophoneLine	micLine			= new MicrophoneLine(logger);
+		MicrophoneLine	micLine			= new MicrophoneLine();
 		StatusWindow	win				= new StatusWindow();
 		
 		prop.load(configDirs);
-<<<<<<< HEAD
+		
 		prop.save();
 		LoggingOutput logger = new LoggingOutput(new File(prop.getLogFile()));
 		logger.log("Starting REAR Client");
-=======
-		
-		logger.out("Loaded Configuration");
->>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		
 		File outFile = new File(prop.getAudioPath());
 		outFile.mkdirs();
