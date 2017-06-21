@@ -11,7 +11,6 @@ import de.uni.goettingen.REARClient.Audio.Recorder;
 import de.uni.goettingen.REARClient.GUI.StatusWindow;
 import de.uni.goettingen.REARClient.Net.DataConnection;
 import de.uni.goettingen.REARClient.Net.DownloadThread;
-import de.uni.goettingen.REARClient.Net.SSH.SSHconnection;
 import de.uni.goettingen.REARClient.Net.SSH.SSHkey;
 
 public class SignalObject {
@@ -23,7 +22,6 @@ public class SignalObject {
 	private DataConnection dataC;
 	private String studentID;
 	private String examID;
-	private SSHconnection ssh;
 	private String uploadServer;
 	private String uploadUser;
 	private PropertiesStore prop;
@@ -39,13 +37,14 @@ public class SignalObject {
 	private Player player;
 	private Player messagePlayer;
 	private Player voicePlayer;
+	private LoggingOutput logger;
 	
 	private Boolean audioTestDone;
 	private Boolean runningAudioTest;
 	
 	private Object downloadSync = new Object();
 
-	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps) {
+	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps, LoggingOutput logOutput) {
 		shutdownServer = false;
 		win = w;
 		micLine = ml;
@@ -63,7 +62,14 @@ public class SignalObject {
 		doPlay = false;
 		audioTestDone = false;
 		runningAudioTest = false;
+		logger = logOutput;
 		this.checkMicrophone();
+	}
+	
+	public void log(String message) {
+		synchronized(logger) {
+			logger.out(message);
+		}
 	}
 
 	public synchronized Boolean getDoPlay() {
@@ -182,8 +188,7 @@ public class SignalObject {
 	}
 
 	public synchronized void initClient() {
-		ssh = new SSHconnection(uploadServer, uploadUser, sshKey, prop);
-		dataC = new DataConnection("127.0.0.1", prop.getDataPort(), ssh);
+		dataC = new DataConnection(this.getUploadPath());
 		dataC.addSignal(this);
 		win.init();
 	}
@@ -197,10 +202,10 @@ public class SignalObject {
 		if(!runningAudioTest) {
 			audioTestDone = false;
 			runningAudioTest = true;
-			System.out.println("Starting audio test");
+			this.log("Starting audio test");
 			win.startAudioTest();
 			recPath = new String(prop.getAudioPath() + "audioTest.flac");
-			System.out.println("  downloading file");
+			this.log("  downloading file");
 			
 			Boolean cont = true;
 			while (cont) {
@@ -213,9 +218,8 @@ public class SignalObject {
 					cont = !playFileDownloaded;
 				}
 			}
-			System.out.print("  playing message");
-			messagePlayer = new Player(playTestFile, null);
-			System.out.print("..."); System.out.flush();
+			this.log("  playing message");
+			messagePlayer = new Player(this, playTestFile, null);
 			while (!messagePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -223,7 +227,7 @@ public class SignalObject {
 					;
 				}
 			}
-			System.out.println("  recording sample");
+			this.log("  recording sample");
 			recMessage = new Recorder(micLine, new File(recPath), true);
 			Thread recThread = new Thread(recMessage);
 			recThread.start();
@@ -233,15 +237,15 @@ public class SignalObject {
 				;
 			}
 			recMessage.stopRecording();
-			System.out.println("    stopped recording");
+			this.log("    stopped recording");
 			try {
 				TimeUnit.SECONDS.sleep(1);
 			} catch (Exception e) {
 				;
 			}
 			micLine.close();
-			System.out.println("  play back recording");
-			voicePlayer = new Player(new File(recPath), null);
+			this.log("  play back recording");
+			voicePlayer = new Player(this, new File(recPath), null);
 			while (!voicePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -249,7 +253,7 @@ public class SignalObject {
 					;
 				}
 			}
-			System.out.println("  done");
+			this.log("  done");
 			micLine.open();
 			audioTestDone = true;
 			runningAudioTest = false;
@@ -271,8 +275,8 @@ public class SignalObject {
 			p.mkdirs();
 		} else
 			path = new String(prop.getAudioPath());
-		System.out.println(path);
-		System.out.println(win.getExamID());
+		this.log("Path = " + path);
+		this.log("ExamID = " + win.getExamID());
 		if (win.getID() != null && !win.getID().equals(""))
 			outFile = new File(path + win.getID().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + ".flac");
 		else
@@ -281,15 +285,15 @@ public class SignalObject {
 		Thread recThread = new Thread(rec);
 		recThread.start();
 		if (doPlay)
-			player = new Player(playFile, rec);
+			player = new Player(this, playFile, rec);
 		win.setRecording(doRecord, doPlay);
 	}
 
 	private synchronized long getRecFileSize() {
-		System.out.println("Determining file Size");
+//		this.log("Determining file Size");
 		if (outFile != null && outFile.exists()) {
 			long l = outFile.length();
-			System.out.println("File size: " + Long.toString(l));
+			this.log("File size: " + Long.toString(l));
 			return l;
 		} else
 			return 0;
@@ -364,5 +368,9 @@ public class SignalObject {
 
 	public synchronized void finishedDownload() {
 		win.setOK();
+	}
+	
+	public synchronized File getUploadPath() {
+		return new File(prop.getUploadPath());
 	}
 }

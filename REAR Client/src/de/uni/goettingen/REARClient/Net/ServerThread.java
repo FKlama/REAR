@@ -40,7 +40,7 @@ public class ServerThread implements Runnable {
 			out			= new DataOutputStream(conn.getOutputStream());
 			remoteAddr	= conn.getInetAddress().toString() + ":" + conn.getPort();
 			if(REARclient.DEBUG)
-				System.out.println("Running connection thread connected to " + remoteAddr + "#\n");
+				signal.log("Running connection thread connected to " + remoteAddr + "#\n");
 
 			while(!quit) {
 				String msg = new String(in.readLine());
@@ -51,7 +51,7 @@ public class ServerThread implements Runnable {
 				}
 				
 				if(REARclient.DEBUG)
-					System.out.println("< " + msg);
+					signal.log("< " + msg);
 
 				if(allowShutdown && !message.get(0).equals("SHUTDOWN"))
 					allowShutdown = false;
@@ -79,14 +79,14 @@ public class ServerThread implements Runnable {
 				
 				else if(message.get(0).equals("RECTIME")) {
 					String outStr = signal.getTime() + "\n";
-					System.out.println("> " + outStr.trim());
+					signal.log("> " + outStr.trim());
 					out.writeBytes(outStr);
 				}
 				
 				else if(message.get(0).equals("STATUS")) {
 					String outStr = new String();
 					outStr = String.valueOf(signal.getMode()) + "\n";
-					System.out.println("> " + outStr.trim());
+					signal.log("> " + outStr.trim());
 					out.writeBytes(outStr);
 				}
 				
@@ -195,7 +195,7 @@ public class ServerThread implements Runnable {
 		if(message.size() > 2) {
 			synchronized(signal) {
 				if(tokenCheck(message.get(2).trim(), message.get(0), remoteAddr, Arrays.asList(1, 0, 2, 3))) {
-					System.out.println("URL: " + message.get(1));
+					signal.log("URL: " + message.get(1));
 					signal.setAudioTestFileURL(message.get(1));
 					signal.startAudioTest();
 				}
@@ -267,7 +267,7 @@ public class ServerThread implements Runnable {
 	
 	private void setID(ArrayList<String> message) throws IOException {
 		if(message.size() > 1) {
-			System.out.println("setID(); message.size() = " + message.size() + " : " + message.get(1));
+			signal.log("setID(); message.size() = " + message.size() + " : " + message.get(1));
 			synchronized(signal) {
 				if(signal.getMode() == 0) {
 					signal.setID(message.get(1));
@@ -285,7 +285,7 @@ public class ServerThread implements Runnable {
 	
 	private void examID(ArrayList<String> message) throws IOException {
 		if(message.size() > 1) {
-			System.out.println("examID(); message.size() = " + message.size() + " : " + message.get(1));
+			signal.log("examID(); message.size() = " + message.size() + " : " + message.get(1));
 			synchronized(signal) {
 				if(signal.getMode() == 0) {
 					signal.setExamID(message.get(1));
@@ -302,10 +302,10 @@ public class ServerThread implements Runnable {
 	}
 
 	private void fileSize(ArrayList<String> message) throws IOException {
-		System.out.println("< FILESIZE");
+		signal.log("< FILESIZE");
 		synchronized(signal) {
 			String size = signal.getFormattedRecFileSize();
-			System.out.println("> " + size);
+			signal.log("> " + size);
 			out.writeBytes(size + "\n");
 		}
 	}
