@@ -6,6 +6,8 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+import de.uni.goettingen.REARClient.SignalObject;
+
 public class MicrophoneLine {
 	private static final float	SAMPLERATE		= 44100.0f;
 	private static final int	BITWIDTH		= 16;
@@ -13,6 +15,7 @@ public class MicrophoneLine {
 
 	private TargetDataLine	tDataLine;
 	private Boolean			lineOpen;
+	private SignalObject	signal;
 
 	public MicrophoneLine() {
 		lineOpen = false;
@@ -43,7 +46,7 @@ public class MicrophoneLine {
 		catch (LineUnavailableException | IllegalArgumentException e)
 		{
 			lineOpen = false;
-			System.out.println("Unable to get a recording line");
+			signal.log("Unable to get a recording line");
 			return false;
 		}
 
@@ -66,5 +69,10 @@ public class MicrophoneLine {
 			tDataLine.close();
 			lineOpen = false;
 		}
+	}
+
+	public void setSignalObject(SignalObject signal) {
+		this.signal = signal;
+		
 	}
 }

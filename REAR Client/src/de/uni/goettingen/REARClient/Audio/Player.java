@@ -2,18 +2,22 @@ package de.uni.goettingen.REARClient.Audio;
 
 import java.io.File;
 
+import de.uni.goettingen.REARClient.SignalObject;
+
 public class Player {
 	private Thread					t;
 	private PlayerThread			pt;
 	private Boolean					playing;
 	private Recorder				rec;
+	private SignalObject			signal;
 
-	public Player(File inFile, Recorder recorder) {
+	public Player(SignalObject sig, File inFile, Recorder recorder) {
+		signal  = sig;
 		playing	= false;
 		rec		= recorder;
-		pt		= new PlayerThread(inFile, this);
+		pt		= new PlayerThread(signal, inFile, this);
 		t		= new Thread(pt);
-		System.out.println("New player thread");
+		signal.log("New player thread");
 		t.start();
 	}
 	

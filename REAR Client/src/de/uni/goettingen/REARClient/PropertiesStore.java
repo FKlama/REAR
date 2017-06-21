@@ -23,10 +23,21 @@ public class PropertiesStore {
 //	public  static final String	DEFAULT_UPLOAD_SERVER		= "192.168.246.132";
 	public  static final String	DEFAULT_UPLOAD_SERVER_USER	= "REAR";
 	
+	public  static final String DEFAULT_UPLOAD_PATH			= "S:\\TestDAF\\flac\\";
+	
+	public String DEFAULT_LOGGING_FILE;
+	
 	private Properties prop;
 	
 	public PropertiesStore() {
 		prop = new Properties();
+		DEFAULT_LOGGING_FILE = System.getProperty("user.home") + File.separator
+		        + "AppData"  + File.separator
+		        +  "Roaming"  + File.separator
+		        + "SafeExamBrowser" + File.separator
+		        + "ExamScreenShotTool.log";
+		
+		
 	}
 	
 	public void load(ArrayList<File> dirList) {
@@ -54,6 +65,8 @@ public class PropertiesStore {
 		prop.setProperty("AudioFile", this.getDefaultAudioFile());
 		prop.setProperty("UploadServer", this.getUploadServer());
 		prop.setProperty("UploadServerUser", this.getUploadServerUser());
+		prop.setProperty("UploadPath", this.getUploadPath());
+		prop.setProperty("LogFile", this.getLogFile());
 		
 		prop.setProperty("ListenPort", String.valueOf(this.getListenPort()));
 		prop.setProperty("DataPort", String.valueOf(this.getDataPort()));
@@ -119,5 +132,13 @@ public class PropertiesStore {
 	
 	public String getUploadServerUser() {
 		return prop.getProperty("UploadServerUser", DEFAULT_UPLOAD_SERVER_USER);
+	}
+	
+	public String getUploadPath() {
+		return prop.getProperty("UploadPath", DEFAULT_UPLOAD_PATH);
+	}
+	
+	public String getLogFile() {
+		return prop.getProperty("LogFile", DEFAULT_LOGGING_FILE);
 	}
 }

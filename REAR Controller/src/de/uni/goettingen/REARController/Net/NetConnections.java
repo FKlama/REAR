@@ -9,7 +9,6 @@ import java.net.InetAddress;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.uni.goettingen.REARController.MainWindow;
 import de.uni.goettingen.REARController.DataStruct.ClientStatus;
 import de.uni.goettingen.REARController.DataStruct.Serializable.SerMachinesTable;
 
@@ -20,8 +19,6 @@ public class NetConnections {
 	private ConcurrentHashMap<Long, String> 		recSizeMap;
 	private ConcurrentHashMap<Long, ClientStatus>	statusMap;
 	private ConcurrentHashMap<Long, Boolean>		activeMap;
-	
-	private PushSSHkeys sshPush;
 
 	public NetConnections() {
 		clientIDs		= new Vector<Long>();
@@ -30,7 +27,6 @@ public class NetConnections {
 		recSizeMap		= new ConcurrentHashMap<Long, String>();
 		statusMap		= new ConcurrentHashMap<Long, ClientStatus>();
 		activeMap		= new ConcurrentHashMap<Long, Boolean>();
-		sshPush 		= null;
 	}
 	
 	public void delete(Long id) {
@@ -94,13 +90,6 @@ public class NetConnections {
 			osw = new OutputStreamWriter(new FileOutputStream(f));
 			osw.write(SSHKeys, 0, SSHKeys.length());
 			osw.close();
-			if(sshPush == null)
-				sshPush = new PushSSHkeys();
-			sshPush.push(
-					MainWindow.getProp().getUploadUser(), 
-					MainWindow.getProp().getUploadServer(), 
-					f, 
-					".ssh/authorized_keys");
 			f.deleteOnExit();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -12,6 +12,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import de.uni.goettingen.REARClient.SignalObject;
+
 
 public class PlayerThread implements Runnable {
 
@@ -24,20 +26,22 @@ public class PlayerThread implements Runnable {
 	private Player					player;
 	private Boolean					stop;
 	private Boolean					done;
+	private SignalObject			signal;
 	
-	PlayerThread(File audioFile, Player p) {
+	PlayerThread(SignalObject sig, File audioFile, Player p) {
+		signal = sig;
 		try {
-			System.out.println("Insisde PlayerThread");
+			signal.log("Insisde PlayerThread");
 			stop			= false;
 			done			= false;
 			player			= p;
 			fileFormat 		= AudioSystem.getAudioFileFormat(audioFile);
 			audioFormat		= fileFormat.getFormat();
-			System.out.println("  got file format");
+			signal.log("  got file format");
 //			type			= fileFormat.getType();
 			
 			inS 			= AudioSystem.getAudioInputStream(audioFile);
-			System.out.println("  got audioInputStream");
+			signal.log("  got audioInputStream");
 			decodedFormat	= new AudioFormat(	AudioFormat.Encoding.PCM_SIGNED,
 					audioFormat.getSampleRate(),
 					16,
@@ -45,7 +49,7 @@ public class PlayerThread implements Runnable {
 					audioFormat.getChannels() * 2,
 					audioFormat.getSampleRate(),
 					false );
-			System.out.println("  created output format");
+			signal.log("  created output format");
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,7 +61,7 @@ public class PlayerThread implements Runnable {
 	}
 	
 	private void rawplay(AudioFormat targetFormat, AudioInputStream dinS) {
-		System.out.println("Inside PlayerThread::rawplay()");
+		signal.log("Inside PlayerThread::rawplay()");
 		byte[] data = new byte[4096];
 		SourceDataLine line = getLine(targetFormat);
 		if(line != null) {
@@ -71,8 +75,8 @@ public class PlayerThread implements Runnable {
 					if(nBytesRead != -1) {
 						nBytesWritten = line.write(data, 0, nBytesRead);
 					}
-					System.out.print(".");
-					System.out.flush();
+//					System.out.print(".");
+//					System.out.flush();
 				}
 				line.drain();
 				line.stop();
@@ -109,7 +113,7 @@ public class PlayerThread implements Runnable {
 	
 	@Override
 	public void run() {
-		System.out.println("Running Player thread");
+		signal.log("Running Player thread");
 		player.setPlaying(true);
 		dinS	= AudioSystem.getAudioInputStream(decodedFormat, inS);
 //		dinS = inS;

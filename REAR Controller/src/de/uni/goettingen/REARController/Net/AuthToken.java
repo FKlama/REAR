@@ -15,7 +15,7 @@ public class AuthToken {
 	private Date						lastUpdate;
 	
 	public AuthToken() {
-		date = new String[3];
+		date = new String[6];
 		update();
 	}
 
@@ -24,8 +24,14 @@ public class AuthToken {
 		date[0] = dateFormat.format(cal.getTime());
 		cal.add(Calendar.HOUR, -1);
 		date[1] = dateFormat.format(cal.getTime());
-		cal.add(Calendar.HOUR, 2);
+		cal.add(Calendar.HOUR, -1);
 		date[2] = dateFormat.format(cal.getTime());
+		cal.add(Calendar.HOUR, 3);
+		date[3] = dateFormat.format(cal.getTime());
+		cal.add(Calendar.HOUR, 1);
+		date[4] = dateFormat.format(cal.getTime());
+		cal.add(Calendar.HOUR, 1);
+		date[5] = dateFormat.format(cal.getTime());
 		lastUpdate = new Date();
 	}
 	
