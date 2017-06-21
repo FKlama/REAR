@@ -6,7 +6,11 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+<<<<<<< HEAD
 import de.uni.goettingen.REARClient.SignalObject;
+=======
+import de.uni.goettingen.REARClient.LoggingOutput;
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 
 public class MicrophoneLine {
 	private static final float	SAMPLERATE		= 44100.0f;
@@ -15,9 +19,14 @@ public class MicrophoneLine {
 
 	private TargetDataLine	tDataLine;
 	private Boolean			lineOpen;
+<<<<<<< HEAD
 	private SignalObject	signal;
+=======
+	private LoggingOutput	log;
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 
-	public MicrophoneLine() {
+	public MicrophoneLine(LoggingOutput log) {
+		this.log = log;
 		lineOpen = false;
 	}
 
@@ -46,7 +55,11 @@ public class MicrophoneLine {
 		catch (LineUnavailableException | IllegalArgumentException e)
 		{
 			lineOpen = false;
+<<<<<<< HEAD
 			signal.log("Unable to get a recording line");
+=======
+			log.out("Unable to get a recording line");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			return false;
 		}
 

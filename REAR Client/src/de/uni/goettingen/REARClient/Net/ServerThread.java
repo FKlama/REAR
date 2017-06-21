@@ -195,7 +195,11 @@ public class ServerThread implements Runnable {
 		if(message.size() > 2) {
 			synchronized(signal) {
 				if(tokenCheck(message.get(2).trim(), message.get(0), remoteAddr, Arrays.asList(1, 0, 2, 3))) {
+<<<<<<< HEAD
 					signal.log("URL: " + message.get(1));
+=======
+					signal.log("Received audio-test-URL: " + message.get(1));
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 					signal.setAudioTestFileURL(message.get(1));
 					signal.startAudioTest();
 				}

@@ -31,17 +31,29 @@ public class PlayerThread implements Runnable {
 	PlayerThread(SignalObject sig, File audioFile, Player p) {
 		signal = sig;
 		try {
+<<<<<<< HEAD
 			signal.log("Insisde PlayerThread");
+=======
+			player.log("Insisde PlayerThread");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			stop			= false;
 			done			= false;
 			player			= p;
 			fileFormat 		= AudioSystem.getAudioFileFormat(audioFile);
 			audioFormat		= fileFormat.getFormat();
+<<<<<<< HEAD
 			signal.log("  got file format");
+=======
+			player.log("  got file format");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 //			type			= fileFormat.getType();
 			
 			inS 			= AudioSystem.getAudioInputStream(audioFile);
+<<<<<<< HEAD
 			signal.log("  got audioInputStream");
+=======
+			player.log("  got audioInputStream");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			decodedFormat	= new AudioFormat(	AudioFormat.Encoding.PCM_SIGNED,
 					audioFormat.getSampleRate(),
 					16,
@@ -49,7 +61,11 @@ public class PlayerThread implements Runnable {
 					audioFormat.getChannels() * 2,
 					audioFormat.getSampleRate(),
 					false );
+<<<<<<< HEAD
 			signal.log("  created output format");
+=======
+			player.log("  created output format");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,7 +77,11 @@ public class PlayerThread implements Runnable {
 	}
 	
 	private void rawplay(AudioFormat targetFormat, AudioInputStream dinS) {
+<<<<<<< HEAD
 		signal.log("Inside PlayerThread::rawplay()");
+=======
+		player.log("Inside PlayerThread::rawplay()");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		byte[] data = new byte[4096];
 		SourceDataLine line = getLine(targetFormat);
 		if(line != null) {
@@ -113,7 +133,11 @@ public class PlayerThread implements Runnable {
 	
 	@Override
 	public void run() {
+<<<<<<< HEAD
 		signal.log("Running Player thread");
+=======
+		player.log("Running Player thread");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		player.setPlaying(true);
 		dinS	= AudioSystem.getAudioInputStream(decodedFormat, inS);
 //		dinS = inS;

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.jcraft.jsch.JSch;
 
+import de.uni.goettingen.REARClient.LoggingOutput;
 import de.uni.goettingen.REARClient.Audio.MicrophoneLine;
 import de.uni.goettingen.REARClient.GUI.StatusWindow;
 import de.uni.goettingen.REARClient.Net.ServerThread;
@@ -19,8 +20,20 @@ public class REARclient {
 	
 	public static final ArrayList<File> configDirs		= new ArrayList<>();;
 	
+	protected static LoggingOutput logger;
+	
 	public static void main(String[] args) throws Exception
 	{
+		String logFilePath = System.getProperty("user.home") + File.separator
+		        + "AppData"  + File.separator
+		        +  "Roaming"  + File.separator
+		        + "SafeExamBrowser" + File.separator
+		        + "REARclient.log";
+		
+		logger = new LoggingOutput(new File(logFilePath));
+		
+		logger.out("Started");
+		
 		configDirs.add(new File("C:\\Users\\ilias\\REAR"));
 		configDirs.add(new File("C:\\tmp"));
 		run();
@@ -29,20 +42,27 @@ public class REARclient {
 	public static void run() throws Exception
 	{
 		PropertiesStore prop			= new PropertiesStore();
-		MicrophoneLine	micLine			= new MicrophoneLine();
+		MicrophoneLine	micLine			= new MicrophoneLine(logger);
 		StatusWindow	win				= new StatusWindow();
 		
 		prop.load(configDirs);
+<<<<<<< HEAD
 		prop.save();
 		LoggingOutput logger = new LoggingOutput(new File(prop.getLogFile()));
 		logger.log("Starting REAR Client");
+=======
+		
+		logger.out("Loaded Configuration");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		
 		File outFile = new File(prop.getAudioPath());
 		outFile.mkdirs();
 		
 		SSHkey			sshKey			= new SSHkey(new JSch(), prop);
 		
+		logger.out("Trying to bind tcp/" + Integer.toString(prop.getListenPort()));
 		ServerSocket server = new ServerSocket(prop.getListenPort(), 10, InetAddress.getByName("0.0.0.0"));
+		logger.out("Successfully bound server to port");
 		
 		SignalObject signal = new SignalObject(win, micLine, sshKey, prop, logger);
 		win.setSignalObject(signal);

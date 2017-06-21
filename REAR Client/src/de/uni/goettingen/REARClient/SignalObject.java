@@ -42,9 +42,16 @@ public class SignalObject {
 	private Boolean audioTestDone;
 	private Boolean runningAudioTest;
 	
+	private LoggingOutput log;
+	
 	private Object downloadSync = new Object();
 
+<<<<<<< HEAD
 	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps, LoggingOutput logOutput) {
+=======
+	public SignalObject(StatusWindow w, MicrophoneLine ml, SSHkey ssh, PropertiesStore ps, LoggingOutput l) {
+		log = l;
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		shutdownServer = false;
 		win = w;
 		micLine = ml;
@@ -67,8 +74,13 @@ public class SignalObject {
 	}
 	
 	public void log(String message) {
+<<<<<<< HEAD
 		synchronized(logger) {
 			logger.out(message);
+=======
+		synchronized(log) {
+			log.out(message);
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		}
 	}
 
@@ -99,11 +111,13 @@ public class SignalObject {
 			synchronized(downloadSync) {
 				playFileDownloaded = false;
 			}
+			log.out("Preparing to download Audio-Test-File");
 			playTestFileLocation = new URL(urlString);
 			playTestFile = new File(prop.getDefaultPath() + "audioTest.mp3");
 			DownloadThread downloadTestTh = new DownloadThread(playTestFileLocation, this, playTestFile);
 			Thread dtt = new Thread(downloadTestTh);
 			dtt.start();
+			log.out("Downloading Audio-Test-File");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -111,7 +125,7 @@ public class SignalObject {
 
 	public synchronized void setAudioFileURL(String urlString) {
 		try {
-			// System.out.println("Setting audio URL = " + urlString);
+			log.out("Setting audio URL = " + urlString);
 			playFileLocation = new URL(urlString);
 			playFile = new File(prop.getDefaultPath() + "playback.mp3");
 			DownloadThread downloadTh = new DownloadThread(playFileLocation, this, playFile);
@@ -199,16 +213,26 @@ public class SignalObject {
 
 	public synchronized void startAudioTest() {
 		String recPath;
+		log.out("Entered startAudioTest()");
 		if(!runningAudioTest) {
 			audioTestDone = false;
 			runningAudioTest = true;
+<<<<<<< HEAD
 			this.log("Starting audio test");
+=======
+			log.out("Starting audio test");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			win.startAudioTest();
 			recPath = new String(prop.getAudioPath() + "audioTest.flac");
+<<<<<<< HEAD
 			this.log("  downloading file");
+=======
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			
+			log.out("  check if file is downloaded");
 			Boolean cont = true;
 			while (cont) {
+				log.out("  checking...");
 				try {
 					Thread.sleep(1000);
 				} catch (Exception e) {
@@ -218,8 +242,14 @@ public class SignalObject {
 					cont = !playFileDownloaded;
 				}
 			}
+<<<<<<< HEAD
 			this.log("  playing message");
 			messagePlayer = new Player(this, playTestFile, null);
+=======
+			System.out.print("  playing message");
+			messagePlayer = new Player(playTestFile, null, this);
+			System.out.print("..."); System.out.flush();
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			while (!messagePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -227,7 +257,11 @@ public class SignalObject {
 					;
 				}
 			}
+<<<<<<< HEAD
 			this.log("  recording sample");
+=======
+			log.out("  recording sample");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			recMessage = new Recorder(micLine, new File(recPath), true);
 			Thread recThread = new Thread(recMessage);
 			recThread.start();
@@ -237,15 +271,24 @@ public class SignalObject {
 				;
 			}
 			recMessage.stopRecording();
+<<<<<<< HEAD
 			this.log("    stopped recording");
+=======
+			log.out("    stopped recording");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			try {
 				TimeUnit.SECONDS.sleep(1);
 			} catch (Exception e) {
 				;
 			}
 			micLine.close();
+<<<<<<< HEAD
 			this.log("  play back recording");
 			voicePlayer = new Player(this, new File(recPath), null);
+=======
+			log.out("  play back recording");
+			voicePlayer = new Player(new File(recPath), null, this);
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			while (!voicePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -253,7 +296,11 @@ public class SignalObject {
 					;
 				}
 			}
+<<<<<<< HEAD
 			this.log("  done");
+=======
+			log.out("  done");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			micLine.open();
 			audioTestDone = true;
 			runningAudioTest = false;
@@ -269,14 +316,20 @@ public class SignalObject {
 	
 	public synchronized void startRecording() {
 		String path;
+		log.out("Starting recording");
 		if (win.getExamID() != null && !win.getExamID().equals("")) {
 			path = new String(prop.getAudioPath() + win.getExamID().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\\");
 			File p = new File(path);
 			p.mkdirs();
 		} else
 			path = new String(prop.getAudioPath());
+<<<<<<< HEAD
 		this.log("Path = " + path);
 		this.log("ExamID = " + win.getExamID());
+=======
+		log.out("  file =" + path);
+		log.out("  ID   =" + win.getExamID());
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		if (win.getID() != null && !win.getID().equals(""))
 			outFile = new File(path + win.getID().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + ".flac");
 		else
@@ -285,15 +338,27 @@ public class SignalObject {
 		Thread recThread = new Thread(rec);
 		recThread.start();
 		if (doPlay)
+<<<<<<< HEAD
 			player = new Player(this, playFile, rec);
+=======
+			player = new Player(playFile, rec, this);
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		win.setRecording(doRecord, doPlay);
 	}
 
 	private synchronized long getRecFileSize() {
+<<<<<<< HEAD
 //		this.log("Determining file Size");
+=======
+		log.out("Determining file Size");
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 		if (outFile != null && outFile.exists()) {
 			long l = outFile.length();
+<<<<<<< HEAD
 			this.log("File size: " + Long.toString(l));
+=======
+			log.out("File size: " + Long.toString(l));
+>>>>>>> branch 'ProductionVersion' of ssh://git@github.com/FKlama/REAR.git
 			return l;
 		} else
 			return 0;
