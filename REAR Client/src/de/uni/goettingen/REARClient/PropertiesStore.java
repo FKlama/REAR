@@ -23,7 +23,7 @@ public class PropertiesStore {
 //	public  static final String	DEFAULT_UPLOAD_SERVER		= "192.168.246.132";
 	public  static final String	DEFAULT_UPLOAD_SERVER_USER	= "REAR";
 	
-	public  static final String DEFAULT_UPLOAD_PATH			= "S:\\TestDAF\\flac";
+	public  static final String DEFAULT_UPLOAD_PATH			= "S:\\TestDAF\\flac\\";
 	
 	public String DEFAULT_LOGGING_FILE;
 	

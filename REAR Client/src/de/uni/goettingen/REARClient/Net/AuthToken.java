@@ -12,13 +12,19 @@ public class AuthToken {
 	private MessageDigest				sha256;
 	
 	public AuthToken() {
-		date = new String[3];
+		date = new String[6];
 		Calendar cal = Calendar.getInstance();
 		date[0] = dateFormat.format(cal.getTime());
 		cal.add(Calendar.HOUR, -1);
 		date[1] = dateFormat.format(cal.getTime());
-		cal.add(Calendar.HOUR, 2);
+		cal.add(Calendar.HOUR, -1);
 		date[2] = dateFormat.format(cal.getTime());
+		cal.add(Calendar.HOUR, 3);
+		date[3] = dateFormat.format(cal.getTime());
+		cal.add(Calendar.HOUR, 1);
+		date[4] = dateFormat.format(cal.getTime());
+		cal.add(Calendar.HOUR, 1);
+		date[5] = dateFormat.format(cal.getTime());
 	}
 
 

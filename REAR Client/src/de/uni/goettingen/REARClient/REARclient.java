@@ -34,7 +34,9 @@ public class REARclient {
 		StatusWindow	win				= new StatusWindow();
 		
 		prop.load(configDirs);
+		prop.save();
 		LoggingOutput logger = new LoggingOutput(new File(prop.getLogFile()));
+		logger.log("Starting REAR Client");
 		
 		File outFile = new File(prop.getAudioPath());
 		outFile.mkdirs();

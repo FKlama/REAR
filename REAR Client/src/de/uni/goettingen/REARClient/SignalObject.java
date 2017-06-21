@@ -202,10 +202,10 @@ public class SignalObject {
 		if(!runningAudioTest) {
 			audioTestDone = false;
 			runningAudioTest = true;
-			System.out.println("Starting audio test");
+			this.log("Starting audio test");
 			win.startAudioTest();
 			recPath = new String(prop.getAudioPath() + "audioTest.flac");
-			System.out.println("  downloading file");
+			this.log("  downloading file");
 			
 			Boolean cont = true;
 			while (cont) {
@@ -218,9 +218,8 @@ public class SignalObject {
 					cont = !playFileDownloaded;
 				}
 			}
-			System.out.print("  playing message");
+			this.log("  playing message");
 			messagePlayer = new Player(this, playTestFile, null);
-			System.out.print("..."); System.out.flush();
 			while (!messagePlayer.isDone()) {
 				try {
 					Thread.sleep(100);
@@ -228,7 +227,7 @@ public class SignalObject {
 					;
 				}
 			}
-			System.out.println("  recording sample");
+			this.log("  recording sample");
 			recMessage = new Recorder(micLine, new File(recPath), true);
 			Thread recThread = new Thread(recMessage);
 			recThread.start();
@@ -238,14 +237,14 @@ public class SignalObject {
 				;
 			}
 			recMessage.stopRecording();
-			System.out.println("    stopped recording");
+			this.log("    stopped recording");
 			try {
 				TimeUnit.SECONDS.sleep(1);
 			} catch (Exception e) {
 				;
 			}
 			micLine.close();
-			System.out.println("  play back recording");
+			this.log("  play back recording");
 			voicePlayer = new Player(this, new File(recPath), null);
 			while (!voicePlayer.isDone()) {
 				try {
@@ -254,7 +253,7 @@ public class SignalObject {
 					;
 				}
 			}
-			System.out.println("  done");
+			this.log("  done");
 			micLine.open();
 			audioTestDone = true;
 			runningAudioTest = false;
@@ -276,8 +275,8 @@ public class SignalObject {
 			p.mkdirs();
 		} else
 			path = new String(prop.getAudioPath());
-		System.out.println(path);
-		System.out.println(win.getExamID());
+		this.log("Path = " + path);
+		this.log("ExamID = " + win.getExamID());
 		if (win.getID() != null && !win.getID().equals(""))
 			outFile = new File(path + win.getID().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + ".flac");
 		else
@@ -291,10 +290,10 @@ public class SignalObject {
 	}
 
 	private synchronized long getRecFileSize() {
-		System.out.println("Determining file Size");
+//		this.log("Determining file Size");
 		if (outFile != null && outFile.exists()) {
 			long l = outFile.length();
-			System.out.println("File size: " + Long.toString(l));
+			this.log("File size: " + Long.toString(l));
 			return l;
 		} else
 			return 0;

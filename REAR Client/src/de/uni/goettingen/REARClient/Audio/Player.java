@@ -12,6 +12,7 @@ public class Player {
 	private SignalObject			signal;
 
 	public Player(SignalObject sig, File inFile, Recorder recorder) {
+		signal  = sig;
 		playing	= false;
 		rec		= recorder;
 		pt		= new PlayerThread(signal, inFile, this);

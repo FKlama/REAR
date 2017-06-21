@@ -27,8 +27,8 @@ public class DataConnection implements Runnable {
 	
 	public void pushFile(File f, String sID, String eID) {
 		file		= f;
-		studentID	= sID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\n";
-		examID		= eID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-") + "\n";
+		studentID	= sID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-");
+		examID		= eID.trim().replaceAll("[/\"\'|\\\\:\\*\\?<>]", "-");
 		signal.log("push " + f.getAbsolutePath());
 		Thread t = new Thread(this);
 		t.start();
@@ -39,7 +39,7 @@ public class DataConnection implements Runnable {
 			signal.log("  inside Thread");
 			String				filename    = examID + "_" + studentID + ".flac";
 			File 				outFile		= new File(uploadPath, filename);
-			
+			signal.log("  copy: " + file.getAbsolutePath() + " => " + outFile.getAbsolutePath());
 			copyFile(file, outFile);
 			
 			Thread.sleep(3000);
