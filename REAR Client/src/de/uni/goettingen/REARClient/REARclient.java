@@ -17,6 +17,9 @@ import de.uni.goettingen.REARClient.Net.SSH.SSHkey;
 public class REARclient {
 	public static final boolean DEBUG					= false;
 	public static final boolean DEBUG_GUI				= false;
+	private static final int	MajorVersion 	= 1;
+	private static final int	MedVersion		= 0;
+	private static final int	MinorVersion	= 2;
 	
 	public static final ArrayList<File> configDirs		= new ArrayList<>();;
 	
@@ -49,7 +52,7 @@ public class REARclient {
 		
 		prop.save();
 		LoggingOutput logger = new LoggingOutput(new File(prop.getLogFile()));
-		logger.log("Starting REAR Client");
+		logger.log("Starting REAR Client v" + getVersion());
 		
 		File outFile = new File(prop.getAudioPath());
 		outFile.mkdirs();
@@ -72,5 +75,13 @@ public class REARclient {
 		}
 		
 		server.close();
+	}
+
+	public static String getVersion() {
+		String ver;
+		ver  = "v" + String.valueOf(MajorVersion);
+		ver += "." + String.valueOf(MedVersion);
+		ver += "." + String.valueOf(MinorVersion);
+		return ver;
 	}
 }

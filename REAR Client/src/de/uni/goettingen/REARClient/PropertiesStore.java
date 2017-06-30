@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class PropertiesStore {
-	public static final String	DEFAULT_PASSPHRASE	= "B2WX1bXaxSJ4g4E8N6zULPXBOjdFXb5fZhh0BjFx7mhUgpzig5Pi5HKEhTF1a1tC";
+	public static final String	DEFAULT_PASSPHRASE	= "Eogheevae3ECh1Gie9AeHoh0ohdohniaquaiph4Eetaec0laod6thi3ahfiih5ai";
 	public static final String	CONFIG_FILENAME		= "REARclient.conf";
 	public static final String	DEFAULT_PATH		= "C:\\Users\\ilias\\REAR\\";
 	

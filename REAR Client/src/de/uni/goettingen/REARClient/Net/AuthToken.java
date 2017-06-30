@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.security.MessageDigest;
 
 public class AuthToken {
-	private static final String			SECRET			= "REPLACE THIS WITH A SECRET STRING!!!";
+	private static final String			SECRET			= "Eogheevae3ECh1Gie9AeHoh0ohdohniaquaiph4Eetaec0laod6thi3ahfiih5ai";
 	private static DateFormat 			dateFormat		= new SimpleDateFormat("yyyyMMddHH");
 	private String[] 					date;
 	private MessageDigest				sha256;
@@ -31,7 +31,7 @@ public class AuthToken {
 
 	public Boolean isValid(String t, String command, String salt) {
 		try {
-			for(int i=0; i<3; ++i) {
+			for(int i=0; i<6; ++i) {
 				sha256 = MessageDigest.getInstance("SHA-256");
 				sha256.update(date[i].getBytes(), 0, date[i].length());
 				sha256.update(salt.getBytes(), 0, salt.length());

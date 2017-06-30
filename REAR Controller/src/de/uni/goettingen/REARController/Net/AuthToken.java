@@ -8,7 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthToken {
-	private static final String			SECRET			= "REPLACE THIS WITH A SECRET STRING!!!";
+	private static final String			SECRET			= "Eogheevae3ECh1Gie9AeHoh0ohdohniaquaiph4Eetaec0laod6thi3ahfiih5ai";
 	private static final DateFormat		dateFormat		= new SimpleDateFormat("yyyyMMddHH");
 	private String[] 					date;
 	private MessageDigest				sha256;
@@ -41,7 +41,7 @@ public class AuthToken {
 			update();
 		try {
 			sha256 = MessageDigest.getInstance("SHA-256");
-			sha256.update(date[1].getBytes(), 0, date[1].length());
+			sha256.update(date[0].getBytes(), 0, date[1].length());
 			sha256.update(salt.getBytes(), 0, salt.length());
 			sha256.update(command.getBytes(), 0, command.length());
 			sha256.update(SECRET.getBytes(), 0, SECRET.length());
@@ -62,7 +62,7 @@ public class AuthToken {
 		if(now.getTime() - lastUpdate.getTime() > 300000)
 			update();
 		try {
-			for(int i=0; i<3; ++i) {
+			for(int i=0; i<6; ++i) {
 				sha256 = MessageDigest.getInstance("SHA-256");
 				sha256.update(date[i].getBytes(), 0, date[i].length());
 				sha256.update(salt.getBytes(), 0, salt.length());

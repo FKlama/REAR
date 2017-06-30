@@ -54,7 +54,7 @@ public class MainWindow implements ActionListener {
 	public  static final String PROGRAM_NAME	= "REAR Controller (Dev Version)";
 	private static final int	MajorVersion 	= 1;
 	private static final int	MedVersion		= 0;
-	private static final int	MinorVersion	= 0;
+	private static final int	MinorVersion	= 2;
 	
 	private JFrame frmREAR;
 
