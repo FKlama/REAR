@@ -57,7 +57,7 @@ public class InfoDialog extends JDialog {
 			contentPanel.add(verticalStrut);
 		}
 		{
-			JLabel lblCopyright = new JLabel("Copyright \u00A9 2015 Frederik Klama");
+			JLabel lblCopyright = new JLabel("Copyright \u00A9 2015 Nina Alexandra Klama");
 			lblCopyright.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			lblCopyright.setAlignmentX(Component.CENTER_ALIGNMENT);
 			contentPanel.add(lblCopyright);

@@ -4,7 +4,7 @@
     <!--ANT 1.7 is required-->
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
-    <property name="dir.workspace" value="C:/Users/Frederik Klama/workspace"/>
+    <property name="dir.workspace" value="C:/Users/Nina Alexandra Klama/workspace"/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/REAR Controller.jar">
@@ -17,8 +17,8 @@
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="${dir.jarfile}/bin"/>
             <zipfileset dir="${dir.jarfile}" includes="miglayout15-swing.jar"/>
-            <zipfileset dir="C:/Users/Frederik Klama/git/REAR" includes="resources.zip"/>
-            <zipfileset dir="C:/Users/Frederik Klama/git/REAR/lib" includes="jsch-0.1.53.jar"/>
+            <zipfileset dir="C:/Users/Nina Alexandra Klama/git/REAR" includes="resources.zip"/>
+            <zipfileset dir="C:/Users/Nina Alexandra Klama/git/REAR/lib" includes="jsch-0.1.53.jar"/>
         </jar>
     </target>
 </project>

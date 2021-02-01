@@ -4,7 +4,7 @@
     <!--ANT 1.7 is required-->
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
-    <property name="dir.workspace" value="C:/Users/Frederik Klama/workspace"/>
+    <property name="dir.workspace" value="C:/Users/Nina Alexandra Klama/workspace"/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/REAR Client.jar">
@@ -16,9 +16,9 @@
             </manifest>
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="${dir.jarfile}/bin"/>
-            <zipfileset dir="C:/Users/Frederik Klama/git/REAR/lib" includes="javaFlacEncoder-0.3.1.jar"/>
-            <zipfileset dir="C:/Users/Frederik Klama/git/REAR/lib" includes="jsch-0.1.53.jar"/>
-            <zipfileset dir="C:/Users/Frederik Klama/git/REAR" includes="resources - Copy (2).zip"/>
+            <zipfileset dir="C:/Users/Nina Alexandra Klama/git/REAR/lib" includes="javaFlacEncoder-0.3.1.jar"/>
+            <zipfileset dir="C:/Users/Nina Alexandra Klama/git/REAR/lib" includes="jsch-0.1.53.jar"/>
+            <zipfileset dir="C:/Users/Nina Alexandra Klama/git/REAR" includes="resources - Copy (2).zip"/>
         </jar>
     </target>
 </project>
